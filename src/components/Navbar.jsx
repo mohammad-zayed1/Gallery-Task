@@ -1,6 +1,19 @@
-import { Link } from "react-router-dom";
-
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../App";
+import { Link, useNavigate } from "react-router-dom";
+import "flowbite";
 const Navbar = () => {
+  const { userData, setRefresh, refresh } = useContext(UserContext);
+  const [token, setToken] = useState(false);
+  const navigateTo = useNavigate();
+
+  useEffect(() => {
+    setToken(JSON.parse(localStorage.getItem("token")));
+  }, [refresh]);
+
+  console.log("token", token);
+  console.log("nav-user", userData);
+
   return (
     <div className="navbar bg-secondary shadow-md text-white">
       <div className="navbar-start">
@@ -26,14 +39,18 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <a>Item 1</a>
+              <Link to="/recentposts">Posts</Link>
             </li>
             <li>
-              <a>Item </a>
+              <Link to="/albums">Albums</Link>
             </li>
-            <li>
-              <a>Item 3</a>
-            </li>
+            {token ? (
+              <li>
+                <Link to="/profile">Profile</Link>
+              </li>
+            ) : (
+              ""
+            )}
           </ul>
         </div>
         <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
@@ -41,16 +58,38 @@ const Navbar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a>Item 1</a>
+            <Link to="/recentposts">Posts</Link>
           </li>
-         
           <li>
-            <a>Item 3</a>
+            <Link to="/albums">Albums</Link>
           </li>
+
+          {token ? (
+            <li>
+              <Link to="/profile">Profile</Link>
+            </li>
+          ) : (
+            ""
+          )}
         </ul>
       </div>
       <div className="navbar-end">
-        <Link to="/login" className="btn">Get Started</Link>
+        {token ? (
+          <button
+            onClick={() => {
+              localStorage.setItem("token", false);
+              setRefresh(!refresh);
+              navigateTo("/login");
+            }}
+            className=" btn  px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+          >
+            Sign out
+          </button>
+        ) : (
+          <Link to="/login" className="btn">
+            Get Started
+          </Link>
+        )}
       </div>
     </div>
   );
