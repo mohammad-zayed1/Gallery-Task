@@ -8,7 +8,9 @@ import "./App.css";
 export const UserContext = createContext();
 
 function App() {
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState(
+    JSON.parse(localStorage.getItem("user")) ?? {}
+  );
   const [refresh, setRefresh] = useState(true);
 
   // const [token, setToken] = useState("");

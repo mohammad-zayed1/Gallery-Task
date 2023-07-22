@@ -1,13 +1,29 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import Loader from "../../../components/Loader";
+import { UserContext } from "../../../App";
+import { ToastContainer, toast } from "react-toastify";
 const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [showMore, setShowMore] = useState(false);
   const [loader, setLoader] = useState(false);
+  const { userData, refresh, setRefresh } = useContext(UserContext);
   const navigate = useNavigate();
+  const uniqueId = uuidv4();
+  const notifySuccess = (msg) => toast.success(msg);
+  const notifyError = (msg) => toast.error(msg);
+
+  const [postInfo, setPostInfo] = useState({
+    userId: userData.id,
+    id: uniqueId,
+    title: "",
+    body: "",
+  });
+  console.log("posts", userData);
+  console.log("postInfo", postInfo);
 
   useEffect(() => {
     axios
@@ -17,16 +33,91 @@ const Posts = () => {
         setLoader(true);
       })
       .catch((error) => console.error(error));
-  }, []);
+  }, [refresh]);
 
   const handleClickPost = (postId) => {
     navigate(`/post/${postId}`);
   };
 
+  const handlePostSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "https://jsonplaceholder.typicode.com/posts",
+        postInfo
+      );
+      console.log("New post created:", response.data);
+      notifySuccess("Post Added Success");
+      setRefresh(!refresh);
+    } catch (error) {
+      console.error("Error creating post:", error);
+      notifyError(error);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPostInfo((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  console.log("posts length", posts.length);
   return (
     <>
       {loader ? (
         <div className="max-w-[90%] mx-auto pb-8">
+          <div>
+            <p className="inline-flex items-center mr-3 mb-3 text-sm text-gray-900 dark:text-white">
+              <img
+                className="mr-2 w-8 h-8 rounded-full"
+                src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+                alt="Michael Gough"
+              />
+              <h3 className="text-lg font-bold ">{`Hello, ${userData.name} 🖐`}</h3>
+            </p>
+
+            <form className="mb-6" onSubmit={handlePostSubmit}>
+              <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                <label htmlFor="comment" className="sr-only">
+                  Your Title
+                </label>
+                <textarea
+                  id="title"
+                  rows={1}
+                  className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none mb-4 "
+                  placeholder="Post Title"
+                  required
+                  name="title"
+                  onChange={handleChange}
+                  value={postInfo.title}
+                />
+              </div>
+              <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                <label htmlFor="comment" className="sr-only">
+                  Your body
+                </label>
+                <textarea
+                  id="title"
+                  rows={3}
+                  className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none mb-4 "
+                  placeholder={`What do you think, ${userData.name} ?`}
+                  required
+                  name="body"
+                  value={postInfo.body}
+                  onChange={handleChange}
+                />
+              </div>
+              <button
+                type="submit"
+                className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+              >
+                Add New Post
+              </button>
+            </form>
+            <ToastContainer />
+          </div>
           <h2 className="text-3xl text-center font-bold mb-6">Recent Posts</h2>
           <div className="grid grid-cols-3 gap-4">
             {posts.slice(0, showMore ? posts.length : 9).map((post) => (
