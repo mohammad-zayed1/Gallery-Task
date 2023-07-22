@@ -80,9 +80,9 @@ const Navbar = () => {
         {token ? (
           <button
             onClick={() => {
-              localStorage.setItem("token", false);
-              setRefresh(!refresh);
+              localStorage.setItem("token", JSON.stringify(false));
               navigateTo("/login");
+              setRefresh(!refresh);
             }}
             className=" btn  px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >

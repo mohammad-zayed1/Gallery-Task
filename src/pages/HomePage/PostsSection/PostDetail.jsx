@@ -10,7 +10,10 @@ const PostDetail = () => {
   const { postId } = useParams();
   const [showFormComment, setShowFormComment] = useState(false);
   const [comments, setComments] = useState([]);
-  const { userData, refresh, setRefresh } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
+  const [token, setToken] = useState(
+    JSON.parse(localStorage.getItem("token")) ?? false
+  );
   const [loader, setLoader] = useState(false);
   const uniqueId = uuidv4();
   const [newComment, setNewComment] = useState({
@@ -36,7 +39,7 @@ const PostDetail = () => {
         setLoader(true);
       })
       .catch((error) => console.error(error));
-  }, [postId]);
+  }, [postId, token]);
 
   const handleComment = async (e) => {
     e.preventDefault();
@@ -124,7 +127,11 @@ const PostDetail = () => {
               ) : (
                 <button
                   type="button"
-                  onClick={() => setShowFormComment(!showFormComment)}
+                  onClick={() => {
+                    token
+                      ? setShowFormComment(!showFormComment)
+                      : notifyError("You must logged in to add comment ");
+                  }}
                   className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400"
                 >
                   <svg

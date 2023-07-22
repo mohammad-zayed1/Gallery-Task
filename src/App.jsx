@@ -13,17 +13,19 @@ function App() {
   );
   const [refresh, setRefresh] = useState(true);
 
-  // const [token, setToken] = useState("");
+  const [token, setToken] = useState(
+    JSON.parse(localStorage.getItem("token")) ?? false
+  );
 
   // useEffect(() => {
-  //   setToken(localStorage.getItem("token"));
+  //   setToken(JSON.parse(localStorage.getItem("token")));
   // }, []);
 
   console.log("app-user", userData);
 
   return (
     <UserContext.Provider
-      value={{ userData, setUserData, refresh, setRefresh }}
+      value={{ userData, setUserData, refresh, setRefresh, token, setToken }}
     >
       <div className="App flex flex-col justify-between h-full items-between">
         <Navbar />

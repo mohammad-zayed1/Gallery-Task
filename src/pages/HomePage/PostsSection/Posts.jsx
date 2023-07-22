@@ -11,7 +11,8 @@ const Posts = () => {
   const [showMore, setShowMore] = useState(false);
   const [loader, setLoader] = useState(false);
   const [users, setUsers] = useState({});
-  const { userData, refresh, setRefresh } = useContext(UserContext);
+  const { userData, refresh, setRefresh} = useContext(UserContext);
+  const [token , setToken] = useState(JSON.parse(localStorage.getItem('token')) ?? false)
   const navigate = useNavigate();
   const uniqueId = uuidv4();
   const notifySuccess = (msg) => toast.success(msg);
@@ -25,7 +26,7 @@ const Posts = () => {
   });
   console.log("posts", userData);
   console.log("postInfo", postInfo);
-
+  console.log("token", token);
   useEffect(() => {
     axios
       .get("https://jsonplaceholder.typicode.com/posts")
@@ -40,7 +41,7 @@ const Posts = () => {
         setUsers(response.data);
       })
       .catch((error) => console.error(error));
-  }, [refresh]);
+  }, [refresh, token]);
 
   console.log(users);
 
@@ -78,58 +79,60 @@ const Posts = () => {
     <>
       {loader ? (
         <div className="max-w-[90%] mx-auto pb-8 my-6">
-          <div>
-            <p className="inline-flex items-center mr-3 mb-3 text-sm text-gray-900 dark:text-white">
-              <img
-                className="mr-2 w-8 h-8 rounded-full"
-                src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
-                alt="Michael Gough"
-              />
-              <h3 className="text-lg font-bold ">{`Hello, ${userData.name} 🖐`}</h3>
-            </p>
+          {token && (
+            <div>
+              <p className="inline-flex items-center mr-3 mb-3 text-sm text-gray-900 dark:text-white">
+                <img
+                  className="mr-2 w-8 h-8 rounded-full"
+                  src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+                  alt="Michael Gough"
+                />
+                <h3 className="text-lg font-bold ">{`Hello, ${userData.name} 🖐`}</h3>
+              </p>
 
-            <form className="mb-6" onSubmit={handlePostSubmit}>
-              <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 h-[50px] shadow-lg">
-                <label htmlFor="comment" className="sr-only">
-                  Your Title
-                </label>
-                <textarea
-                  id="title"
-                  rows={1}
-                  className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none mb-4 resize-none "
-                  placeholder="Post Title"
-                  required
-                  name="title"
-                  onChange={handleChange}
-                  value={postInfo.title}
-                />
-              </div>
-              <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 shadow-lg">
-                <label htmlFor="comment" className="sr-only">
-                  Your body
-                </label>
-                <textarea
-                  id="title"
-                  rows={3}
-                  className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none mb-4 resize-none "
-                  placeholder={`What do you think, ${userData.name} ?`}
-                  required
-                  name="body"
-                  value={postInfo.body}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="flex justify-center items-center">
-                <button
-                  type="submit"
-                  className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
-                >
-                  Add New Post
-                </button>
-              </div>
-            </form>
-            <ToastContainer />
-          </div>
+              <form className="mb-6" onSubmit={handlePostSubmit}>
+                <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 h-[50px] shadow-lg">
+                  <label htmlFor="comment" className="sr-only">
+                    Your Title
+                  </label>
+                  <textarea
+                    id="title"
+                    rows={1}
+                    className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none mb-4 resize-none "
+                    placeholder="Post Title"
+                    required
+                    name="title"
+                    onChange={handleChange}
+                    value={postInfo.title}
+                  />
+                </div>
+                <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 shadow-lg">
+                  <label htmlFor="comment" className="sr-only">
+                    Your body
+                  </label>
+                  <textarea
+                    id="title"
+                    rows={3}
+                    className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none mb-4 resize-none "
+                    placeholder={`What do you think, ${userData.name} ?`}
+                    required
+                    name="body"
+                    value={postInfo.body}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="flex justify-center items-center">
+                  <button
+                    type="submit"
+                    className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+                  >
+                    Add New Post
+                  </button>
+                </div>
+              </form>
+              <ToastContainer />
+            </div>
+          )}
           <h2 className="text-3xl text-center font-bold mb-6">Recent Posts</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 h-[500px] overflow-scroll overflow-x-hidden">
             {posts.slice(0, showMore ? posts.length : 9).map((post) => {
