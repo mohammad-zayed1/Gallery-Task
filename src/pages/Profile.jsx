@@ -1,19 +1,20 @@
 // src/components/UserProfile.js
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-
+import { UserContext } from "../App";
 const Profile = () => {
+  const { userData } = useContext(UserContext);
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     axios
-      .get("https://jsonplaceholder.typicode.com/users/1") // Assuming user ID 1 for demonstration
+      .get(`https://jsonplaceholder.typicode.com/users/${userData.id}`) // Assuming user ID 1 for demonstration
       .then((response) => setUser(response.data))
       .catch((error) => console.error(error));
 
     axios
-      .get("https://jsonplaceholder.typicode.com/posts?userId=1") // Assuming user ID 1 for demonstration
+      .get(`https://jsonplaceholder.typicode.com/posts?userId=${userData.id}`) // Assuming user ID 1 for demonstration
       .then((response) => setPosts(response.data))
       .catch((error) => console.error(error));
   }, []);
