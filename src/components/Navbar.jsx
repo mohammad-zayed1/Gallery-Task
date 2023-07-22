@@ -36,7 +36,7 @@ const Navbar = () => {
           </label>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 text-black"
           >
             <li>
               <Link to="/recentposts">Posts</Link>
@@ -84,7 +84,7 @@ const Navbar = () => {
               setRefresh(!refresh);
               navigateTo("/login");
             }}
-            className=" btn  px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+            className=" btn  px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
             Sign out
           </button>

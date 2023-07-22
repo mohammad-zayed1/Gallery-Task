@@ -25,7 +25,7 @@ function App() {
     <UserContext.Provider
       value={{ userData, setUserData, refresh, setRefresh }}
     >
-      <div className="App flex flex-col h-full">
+      <div className="App flex flex-col justify-between h-full items-between">
         <Navbar />
         <main className="main-content grow ">
           <AppRoutes />

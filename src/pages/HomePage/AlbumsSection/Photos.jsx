@@ -27,7 +27,7 @@ const Photos = () => {
           <div className="font-bold text-lg my-4">
             Total Photos ( {photos.length} )
           </div>
-          <div className="grid grid-cols-7 gap-4 ">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-4 ">
             {photos.map((photo) => (
               <img
                 key={photo.id}

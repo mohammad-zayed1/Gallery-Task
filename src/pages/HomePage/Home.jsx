@@ -4,8 +4,8 @@ import Posts from "./PostsSection/Posts";
 const Home = () => {
   return (
     <div className="">
-      <Albums />
       <Posts />
+      <Albums />
     </div>
   );
 };
