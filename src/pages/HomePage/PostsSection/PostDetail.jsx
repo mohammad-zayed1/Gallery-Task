@@ -52,7 +52,6 @@ const PostDetail = () => {
       setShowFormComment(!showFormComment);
       notifySuccess("Comment added success");
       setComments((prev) => [...prev, response.data]);
-      // setRefresh(!refresh);
     } catch (error) {
       console.error("Error creating comment:", error);
       notifyError(error);
@@ -61,7 +60,7 @@ const PostDetail = () => {
   const comment = comments.map((comment) => (
     <article
       key={comment.id}
-      className="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg"
+      className="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg shadow-xl border-t-2"
     >
       <footer className="flex justify-between items-center mb-2">
         <div className="flex items-center">
@@ -87,7 +86,7 @@ const PostDetail = () => {
     <>
       {loader ? (
         <div className="max-w-[80%] mx-auto py-8">
-          <article className="p-6 mb-6 text-base bg-white rounded-lg dark:bg-gray-900">
+          <article className="p-6 mb-6 text-base bg-white rounded-lg shadow-xl border-t-2 border-primary">
             <footer className="flex justify-between items-center mb-2">
               <div className="flex items-center">
                 <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">

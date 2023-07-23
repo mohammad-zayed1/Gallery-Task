@@ -29,7 +29,7 @@ const Albums = () => {
       {loader ? (
         <div className="max-w-[90%] mx-auto py-8 grow">
           <h2 className="text-3xl text-center font-bold my-6">Albums</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 sm:gap-2 max-h-[500px] overflow-scroll">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 sm:gap-2 max-h-[500px] overflow-scroll p-2">
             {albums.slice(0, showMore ? albums.length : 9).map((album) => (
               <div
                 key={album.id}

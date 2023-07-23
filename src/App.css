@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 .login {
-  background-image: url("./assets/stacked-peaks-haikei.svg");
+  background-image: url("./assets/symbol-scatter-haikei (1).svg");
 }
 .posts {
   transition: 0.2s;
@@ -17,7 +17,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #d75050;
+  background-color: #057aff;
   border-radius: 4px;
 }
 

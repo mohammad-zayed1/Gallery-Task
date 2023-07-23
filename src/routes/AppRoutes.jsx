@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import Login from "../pages/Login";
 import Home from "../pages/HomePage/Home";
-import Profile from "../pages/Profile";
+import Profile from "../pages/ProfilePage/Profile";
 import Photos from "../pages/HomePage/AlbumsSection/Photos";
 import PostDetail from "../pages/HomePage/PostsSection/PostDetail";
 import Posts from "../pages/HomePage/PostsSection/Posts";

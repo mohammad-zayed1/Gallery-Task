@@ -10,9 +10,11 @@ const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [showMore, setShowMore] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [users, setUsers] = useState({});
-  const { userData, refresh, setRefresh} = useContext(UserContext);
-  const [token , setToken] = useState(JSON.parse(localStorage.getItem('token')) ?? false)
+  const [users, setUsers] = useState([]);
+  const { userData, refresh, setRefresh } = useContext(UserContext);
+  const [token, setToken] = useState(
+    JSON.parse(localStorage.getItem("token")) ?? false
+  );
   const navigate = useNavigate();
   const uniqueId = uuidv4();
   const notifySuccess = (msg) => toast.success(msg);
@@ -20,7 +22,7 @@ const Posts = () => {
 
   const [postInfo, setPostInfo] = useState({
     userId: userData.id,
-    id: uniqueId,
+    id: new Date(),
     title: "",
     body: "",
   });
@@ -43,8 +45,6 @@ const Posts = () => {
       .catch((error) => console.error(error));
   }, [refresh, token]);
 
-  console.log(users);
-
   const handleClickPost = (postId) => {
     navigate(`/post/${postId}`);
   };
@@ -58,13 +58,14 @@ const Posts = () => {
         postInfo
       );
       console.log("New post created:", response.data);
-      setPosts((prev) => [...prev, response.data]);
       notifySuccess("Post Added Success");
-      // setRefresh(!refresh);
+      setPosts((prev) => [...prev, response.data]);
     } catch (error) {
       console.error("Error creating post:", error);
       notifyError(error);
     }
+    postInfo.title = "";
+    postInfo.body = "";
   };
 
   const handleChange = (e) => {
@@ -81,14 +82,14 @@ const Posts = () => {
         <div className="max-w-[90%] mx-auto pb-8 my-6">
           {token && (
             <div>
-              <p className="inline-flex items-center mr-3 mb-3 text-sm text-gray-900 dark:text-white">
+              <div className="inline-flex items-center mr-3 mb-3 text-sm text-gray-900 dark:text-white">
                 <img
                   className="mr-2 w-8 h-8 rounded-full"
                   src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
                   alt="Michael Gough"
                 />
                 <h3 className="text-lg font-bold ">{`Hello, ${userData.name} 🖐`}</h3>
-              </p>
+              </div>
 
               <form className="mb-6" onSubmit={handlePostSubmit}>
                 <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 h-[50px] shadow-lg">
@@ -134,23 +135,28 @@ const Posts = () => {
             </div>
           )}
           <h2 className="text-3xl text-center font-bold mb-6">Recent Posts</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 h-[500px] overflow-scroll overflow-x-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 h-[500px] overflow-scroll overflow-x-hidden p-2">
             {posts.slice(0, showMore ? posts.length : 9).map((post) => {
-              // let user = users[index]["id"] === post.userId && users[index];
+              const user = users?.filter((user) => user.id === post.userId)[0];
+              // setUser(userr);
+
               return (
                 <article
                   key={post.id}
-                  className="posts p-6 mb-2 text-base bg-white rounded-lg flex flex-col justify-between hover:border-l-2 hover:border-primary  shadow-lg"
+                  className="posts p-6 mb-2 text-base bg-white rounded-lg flex flex-col justify-between border-l-2 border-primary  shadow-lg"
                 >
                   <footer className="flex justify-between items-center mb-2">
                     <div className="flex items-center">
                       <p className="inline-flex items-center mr-3 text-sm text-gray-900 ">
                         <img
-                          className="mr-2 w-6 h-6 rounded-full"
+                          className="mr-2 w-8 h-8 rounded-full"
                           src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
                           alt="Michael Gough"
                         />
-                        user_{post.userId}
+                        <div className="flex flex-col">
+                          <span className="font-bold">{user?.name}</span>
+                          <span className="text-[#aaa]">{user?.email}</span>
+                        </div>
                       </p>
                     </div>
                   </footer>
@@ -174,7 +180,9 @@ const Posts = () => {
           <div className="w-full flex justify-center items-center my-5">
             <button
               className="btn btn-md btn-primary"
-              onClick={() => setShowMore(!showMore)}
+              onClick={() => {
+                setShowMore(!showMore);
+              }}
             >
               Show {showMore ? "Less" : "More"}
             </button>
